@@ -1,0 +1,50 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: backend-sportsline
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    networks:
+      - app-network
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: sportsline
+      DB_USER: postgres
+      DB_PASS: postgres
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+
+  db:
+    image: postgres:15
+    container_name: postgres-sportsline
+    restart: always
+    environment:
+      POSTGRES_DB: sportsline
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+
+volumes:
+  pgdata:
+
+networks:
+  app-network:
