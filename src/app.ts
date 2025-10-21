@@ -1,10 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import sequelize from './database/db.ts';
 
-
-
-
-dotenv.config();
 
 const app = express();
 app.use(cors());
