@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import sequelize from './database/db.ts';
-
+import { runSeeders }  from './seeders/index.ts';
 
 const app = express();
 app.use(cors());
@@ -24,6 +24,8 @@ app.listen(PORT, () => {
     await sequelize.sync({ alter: true });
     console.log('Modelos sincronizados con relaciones');
 
+    await runSeeders(); // Ejecuta los seeders
+    console.log('¡Base de datos poblada!');
   } catch (err) {
     console.error('Error al iniciar la app:', err);
   }
