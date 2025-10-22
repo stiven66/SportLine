@@ -6,10 +6,19 @@ import ProductoController from '../controller/ProductoController.ts';
 
 const router = Router();
 
-// Solo admin puede crear productos
-router.post('/crear', verifyToken, checkRole(['admin']), ProductoController.crearProducto);
+// Crear producto (solo admin)
+router.post('/', verifyToken, checkRole(['admin']), ProductoController.crear);
 
-// Admin y vendedor pueden ver productos
-router.get('/', verifyToken, checkRole(['admin', 'vendedor']), ProductoController.listarProductos);
+// Listar productos (admin y vendedor)
+router.get('/', verifyToken, checkRole(['admin', 'vendedor']), ProductoController.listar);
+
+// Obtener producto por ID
+router.get('/:id', verifyToken, checkRole(['admin', 'vendedor']), ProductoController.obtener);
+
+// Actualizar producto (solo admin)
+router.put('/:id', verifyToken, checkRole(['admin']), ProductoController.actualizar);
+
+// Eliminar producto (solo admin)
+router.delete('/:id', verifyToken, checkRole(['admin']), ProductoController.eliminar);
 
 export default router;
