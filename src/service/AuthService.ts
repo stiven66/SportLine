@@ -1,4 +1,5 @@
 import Usuario from '../models/usuario.ts';
+import UsuarioDAO from '../dao/UsuarioDAO.ts';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -7,11 +8,12 @@ const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'refreshsecreto';
 
 const AuthService = {
   async register(data: any) {
-    const existe = await Usuario.findOne({ where: { email: data.email } });
+    
+    const existe = await UsuarioDAO.encontrarPorEmail(data.email);
     if (existe) throw new Error('El email ya está registrado');
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
-    const usuario = await Usuario.create({
+    const usuario = await UsuarioDAO.crearUsuario({
       nombre: data.nombre,
       email: data.email,
       password: hashedPassword,
@@ -27,7 +29,7 @@ const AuthService = {
   },
 
   async login(data: any) {
-    const usuario = await Usuario.findOne({ where: { email: data.email } });
+    const usuario = await UsuarioDAO.encontrarPorEmail(data.email);
     if (!usuario) throw new Error('Credenciales inválidas');
 
     const valid = await bcrypt.compare(data.password, usuario.getDataValue('password'));
