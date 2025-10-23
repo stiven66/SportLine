@@ -2,10 +2,29 @@ import express from 'express';
 import cors from 'cors';
 import sequelize from './database/db.ts';
 import { runSeeders }  from './seeders/index.ts';
+import dotenv from 'dotenv';
+import swaggerSpec from './docs/swagger.ts';
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Rutas
+import productosRoutes from './routes/productos.routes.ts';
+import clientesRoutes from './routes/clientes.routes.ts';
+import pedidosRoutes from './routes/pedidos.routes.ts';
+
+
+// Rutas principales
+app.use('/api/productos', productosRoutes);
+app.use('/api/clientes', clientesRoutes);
+app.use('/api/pedidos', pedidosRoutes);
+
+// Ruta base
+app.get('/', (req, res) => {
+  res.send('API funcionando correctamente');
+});
 
 
 
@@ -30,3 +49,5 @@ app.listen(PORT, () => {
     console.error('Error al iniciar la app:', err);
   }
 })();
+
+export default app;
